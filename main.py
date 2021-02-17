@@ -1,4 +1,5 @@
 from os import system
+from db import *
 
 
 def print_menu():
@@ -10,12 +11,30 @@ def print_menu():
     print('[S]Buscar contacto')
 
 
+def getData():
+    print('Ingresa los siguientes datos:')
+    name = input('Nombre: ')
+    surname = input('Apellido: ')
+    phone = input('Teléfono: ')
+    email = input('Email: ')
+
+    return [name, surname, phone, email]
+
+
 def create():
-    pass
+    data = getData()
+    print(data[0])
+    sql = "INSERT INTO contact VALUES (%s, %s, %s, %s)"
+    cursor.execute(sql, (data[0], data[1], data[2], data[3]))
+    connection.commit()
 
 
 def read():
-    pass
+    sql = "SELECT * FROM contact"
+    cursor.execute(sql)
+
+    data = cursor.fetchall()
+    print(data)
 
 
 def update():
