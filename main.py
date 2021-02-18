@@ -1,5 +1,6 @@
 from os import system
 from db import *
+from Contact import *
 
 
 def print_menu():
@@ -18,14 +19,16 @@ def getData():
     phone = input('Teléfono: ')
     email = input('Email: ')
 
-    return [name, surname, phone, email]
+    contact = Contact(name, surname, phone, email)
+
+    return contact
 
 
 def create():
     data = getData()
-    print(data[0])
     sql = "INSERT INTO contact VALUES (%s, %s, %s, %s)"
-    cursor.execute(sql, (data[0], data[1], data[2], data[3]))
+    cursor.execute(sql, (data.getName, data.getSurname,
+                         data.getPhone, data.getEmail))
     connection.commit()
 
 
@@ -34,7 +37,22 @@ def read():
     cursor.execute(sql)
 
     data = cursor.fetchall()
-    print(data)
+
+    for i in data:
+        k = 0
+        while k < 4:
+            if (k == 0):
+                print('Nombre: ', i[k])
+            if (k == 1):
+                print('Apellido: ', i[k])
+            if (k == 2):
+                print('Teléfono: ', i[k])
+            if (k == 3):
+                print('Email: ', i[k])
+
+            k += 1
+
+        print('-' * 40)
 
 
 def update():
@@ -52,7 +70,7 @@ def search():
 def run():
     print_menu()
     command = input()
-    command.upper()
+    command = command.upper()
     system('clear')
 
     if command == 'C':
