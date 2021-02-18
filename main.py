@@ -1,4 +1,5 @@
 from os import system
+import sys
 from db import *
 from Contact import *
 
@@ -10,6 +11,7 @@ def print_menu():
     print('[U]Actualizar contacto')
     print('[D]Eliminar contacto')
     print('[S]Buscar contacto')
+    print('[E]Salir')
 
 
 def getData():
@@ -56,7 +58,44 @@ def read():
 
 
 def update():
-    pass
+    phone = input('Ingrese el número de télefono: ')
+    sql = "SELECT * FROM contact WHERE phones=(%s)"
+    cursor.execute(sql, phone)
+    data = cursor.fetchone()
+
+    print('a. Nombre: ', data[0])
+    print('b. Apellido: ', data[1])
+    print('c. Teléfono: ', data[2])
+    print('d. Email: ', data[3])
+    option = input('Seleccione una opción para actualizar: ')
+    option = option.upper()
+    value = input('Nuevo valor: ')
+
+    if option == 'A':
+        sql = "UPDATE contact SET names=(%s) WHERE phones=(%s)"
+        cursor.execute(sql, (value, phone))
+
+    if option == 'B':
+        sql = "UPDATE contact SET surnames=(%s) WHERE phones=(%s)"
+        cursor.execute(sql, (value, phone))
+
+    if option == 'C':
+        sql = "UPDATE contact SET phones=(%s) WHERE phones=(%s)"
+        cursor.execute(sql, (value, phone))
+
+    if option == 'D':
+        sql = "UPDATE contact SET emails=(%s) WHERE phones=(%s)"
+        cursor.execute(sql, (value, phone))
+
+    print('Datos actualizados: ')
+    sql = "SELECT * FROM contact WHERE phones=(%s)"
+    cursor.execute(sql, phone)
+    data = cursor.fetchone()
+
+    print('a. Nombre: ', data[0])
+    print('b. Apellido: ', data[1])
+    print('c. Teléfono: ', data[2])
+    print('d. Email: ', data[3])
 
 
 def delete():
@@ -68,6 +107,7 @@ def search():
 
 
 def run():
+
     print_menu()
     command = input()
     command = command.upper()
@@ -75,14 +115,22 @@ def run():
 
     if command == 'C':
         create()
-    if command == 'R':
+    elif command == 'R':
         read()
-    if command == 'U':
+    elif command == 'U':
         update()
-    if command == 'D':
+    elif command == 'D':
         delete()
-    if command == 'S':
+    elif command == 'S':
         search()
+    elif command == 'E':
+        sys.exit()
+    else:
+        print('Opción ingresada inválida')
+        run()
+
+    while command == 'C' or command == 'R' or command == 'U' or command == 'D' or command == 'S':
+        run()
 
 
 if __name__ == "__main__":
