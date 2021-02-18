@@ -58,6 +58,70 @@ def read():
 
 
 def update():
+    phone = search()
+
+    option = input('Seleccione una opción para actualizar: ')
+    option = option.upper()
+    value = input('Nuevo valor: ')
+
+    if option == 'A':
+        sql = "UPDATE contact SET names=(%s) WHERE phones=(%s)"
+        cursor.execute(sql, (value, phone))
+
+    elif option == 'B':
+        sql = "UPDATE contact SET surnames=(%s) WHERE phones=(%s)"
+        cursor.execute(sql, (value, phone))
+
+    elif option == 'C':
+        sql = "UPDATE contact SET phones=(%s) WHERE phones=(%s)"
+        cursor.execute(sql, (value, phone))
+
+    elif option == 'D':
+        sql = "UPDATE contact SET emails=(%s) WHERE phones=(%s)"
+        cursor.execute(sql, (value, phone))
+
+    else:
+        print('Opción incorrecta')
+        update()
+
+    print('Datos actualizados: ')
+
+    if option == 'A' or option == 'B' or option == 'D':
+        sql = "SELECT * FROM contact WHERE phones=(%s)"
+        cursor.execute(sql, phone)
+
+    elif option == 'C':
+        sql = "SELECT * FROM contact WHERE phones=(%s)"
+        cursor.execute(sql, value)
+
+    data = cursor.fetchone()
+
+    print('a. Nombre: ', data[0])
+    print('b. Apellido: ', data[1])
+    print('c. Teléfono: ', data[2])
+    print('d. Email: ', data[3])
+
+    connection.commit()
+
+
+def delete():
+    phone = search()
+    option = input('¿Realmente desea eliminar este contacto? (Y/n)')
+    option = option.upper()
+
+    if option == 'Y':
+        sql = "DELETE FROM contact WHERE phones=(%s)"
+        cursor.execute(sql, phone)
+
+    elif option == 'N':
+        run()
+
+    elif option != 'Y' and option != 'N':
+        print('Opción incorrecta')
+        run()
+
+
+def search():
     phone = input('Ingrese el número de télefono: ')
     sql = "SELECT * FROM contact WHERE phones=(%s)"
     cursor.execute(sql, phone)
@@ -67,43 +131,8 @@ def update():
     print('b. Apellido: ', data[1])
     print('c. Teléfono: ', data[2])
     print('d. Email: ', data[3])
-    option = input('Seleccione una opción para actualizar: ')
-    option = option.upper()
-    value = input('Nuevo valor: ')
 
-    if option == 'A':
-        sql = "UPDATE contact SET names=(%s) WHERE phones=(%s)"
-        cursor.execute(sql, (value, phone))
-
-    if option == 'B':
-        sql = "UPDATE contact SET surnames=(%s) WHERE phones=(%s)"
-        cursor.execute(sql, (value, phone))
-
-    if option == 'C':
-        sql = "UPDATE contact SET phones=(%s) WHERE phones=(%s)"
-        cursor.execute(sql, (value, phone))
-
-    if option == 'D':
-        sql = "UPDATE contact SET emails=(%s) WHERE phones=(%s)"
-        cursor.execute(sql, (value, phone))
-
-    print('Datos actualizados: ')
-    sql = "SELECT * FROM contact WHERE phones=(%s)"
-    cursor.execute(sql, phone)
-    data = cursor.fetchone()
-
-    print('a. Nombre: ', data[0])
-    print('b. Apellido: ', data[1])
-    print('c. Teléfono: ', data[2])
-    print('d. Email: ', data[3])
-
-
-def delete():
-    pass
-
-
-def search():
-    pass
+    return phone
 
 
 def run():
