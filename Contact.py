@@ -16,15 +16,3 @@ class Contact:
 
     def getEmail(self):
         return self._email
-
-    def setName(self, name):
-        self._name = name
-
-    def setSurname(self, surname):
-        self._surname = surname
-
-    def setPhone(self, phone):
-        self._phone = phone
-
-    def setEmail(self, email):
-        self._email = email
